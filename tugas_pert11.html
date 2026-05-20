@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Studi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            padding: 40px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 16px 10px;
+            text-align: center;
+            border-bottom: 1px solid #eaeaea;
+        }
+        th {
+            color: #3b82f6; /* Blue text */
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        th:first-child, td:first-child {
+            text-align: left;
+            padding-left: 20px;
+        }
+        .footer-row td {
+            border-bottom: none;
+            padding-top: 25px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <table>
+        <thead>
+            <tr>
+                <th>NAMA MATA KULIAH</th>
+                <th>Sks</th>
+                <th>JUMLAH KEHADIRAN</th>
+                <th>TUGAS</th>
+                <th>UTS</th>
+                <th>UAS</th>
+                <th>NILAI</th>
+                <th>MUTU</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Data will be inserted here -->
+        </tbody>
+        <tfoot>
+            <tr class="footer-row">
+                <td colspan="4" style="text-align: center; padding-right: 80px;">IPS</td>
+                <td colspan="2" style="text-align: center; padding-right: 30px;" id="ipsValue"></td>
+                <td colspan="2"></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        // Data Mata Kuliah
+        const mataKuliah = [
+            { nama: "Pemrograman 1", sks: 3, absen: 21, tugas: 90, uts: 70, uas: 80 },
+            { nama: "Basis Data 1", sks: 3, absen: 21, tugas: 99, uts: 96, uas: 99 },
+            { nama: "Teori Bahasa dan Automata", sks: 2, absen: 14, tugas: 80, uts: 65, uas: 75 },
+            { nama: "Data Mining", sks: 2, absen: 14, tugas: 98, uts: 85, uas: 80 },
+            { nama: "Analisa dan Perancangan Sistem", sks: 2, absen: 13, tugas: 74.29, uts: 90, uas: 80 },
+            { nama: "Cloud Computing", sks: 3, absen: 21, tugas: 85, uts: 75, uas: 85 },
+            { nama: "Metode Numerik", sks: 3, absen: 21, tugas: 100, uts: 87, uas: 100 },
+            { nama: "Interaksi Manusia dan Komputer", sks: 2, absen: 13, tugas: 70, uts: 80, uas: 95 },
+        ];
+
+        let totalSKS = 0;
+        let totalMutu = 0;
+        const tbody = document.getElementById("tableBody");
+
+        mataKuliah.forEach((mk) => {
+            // Validasi Input (tanpa function)
+            let nilaiValid = true;
+            
+            // Maksimal kehadiran adalah SKS * 7 (Contoh: 3 SKS = 21, 2 SKS = 14)
+            let maxAbsen = mk.sks * 7;
+
+            if (mk.absen < 0 || mk.absen > maxAbsen) nilaiValid = false;
+            if (mk.tugas < 0 || mk.tugas > 100) nilaiValid = false;
+            if (mk.uts < 0 || mk.uts > 100) nilaiValid = false;
+            if (mk.uas < 0 || mk.uas > 100) nilaiValid = false;
+
+            if (!nilaiValid) return;
+
+            // Hitung persentase kehadiran (maksimal 100%)
+            let persentaseAbsen = (mk.absen / maxAbsen) * 100;
+
+            // 1. OPERATOR PERHITUNGAN (Aritmatika)
+            const nilaiAkhir = (persentaseAbsen * 0.40) + (mk.tugas * 0.10) + (mk.uts * 0.25) + (mk.uas * 0.25);
+
+            let grade = "";
+            let bobot = 0;
+
+            // 2. OPERATOR PERBANDINGAN & LOGIKA
+            if (nilaiAkhir >= 90) {
+                grade = "A"; bobot = 4.00;
+            } else if (nilaiAkhir >= 85) {
+                grade = "A-"; bobot = 3.67;
+            } else if (nilaiAkhir >= 80) {
+                grade = "B+"; bobot = 3.33;
+            } else if (nilaiAkhir >= 75) {
+                grade = "B"; bobot = 3.00;
+            } else if (nilaiAkhir >= 70) {
+                grade = "B-"; bobot = 2.67;
+            } else if (nilaiAkhir >= 65) {
+                grade = "C+"; bobot = 2.33;
+            } else if (nilaiAkhir >= 60) {
+                grade = "C"; bobot = 2.00;
+            } else if (nilaiAkhir >= 50) {
+                grade = "D"; bobot = 1.00;
+            } else {
+                grade = "E"; bobot = 0.00;
+            }
+
+            const mutu = bobot * mk.sks;
+            totalSKS += mk.sks;
+            totalMutu += mutu;
+
+            // Create row
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${mk.nama.toUpperCase()}</td>
+                <td>${mk.sks}</td>
+                <td>${mk.absen}</td>
+                <td>${mk.tugas.toFixed(2)}</td>
+                <td>${mk.uts.toFixed(2)}</td>
+                <td>${mk.uas.toFixed(2)}</td>
+                <td>${grade}</td>
+                <td>${mutu.toFixed(2)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Menghitung IPS (Operator Pembagian)
+        let ips = 0;
+        if (totalSKS > 0) {
+            ips = totalMutu / totalSKS;
+        }
+
+        // Tampilkan nilai IPS
+        document.getElementById("ipsValue").textContent = ips.toFixed(2);
+    </script>
+</body>
+</html>
