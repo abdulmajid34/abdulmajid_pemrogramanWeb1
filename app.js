@@ -1,4 +1,4 @@
-// Data Mata Kuliah
+        // Data Mata Kuliah
         const mataKuliah = [
             { nama: "Pemrograman 1", sks: 3, absen: 21, tugas: 90, uts: 70, uas: 80 },
             { nama: "Basis Data 1", sks: 3, absen: 21, tugas: 99, uts: 96, uas: 99 },
@@ -22,7 +22,6 @@
         console.log("=========================================\n");
 
         mataKuliah.forEach((mk) => {
-            //Validasi Input (tanpa function)
             let nilaiValid = true;
             
             // Maksimal kehadiran adalah SKS * 7 (Contoh: 3 SKS = 21, 2 SKS = 14)
@@ -50,7 +49,7 @@
                 adaError = true;
                 return;
             }
-
+            
             // Hitung persentase kehadiran (maksimal 100%)
             let persentaseAbsen = (mk.absen / maxAbsen) * 100;
 
