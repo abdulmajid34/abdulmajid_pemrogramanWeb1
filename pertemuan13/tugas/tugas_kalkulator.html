@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Kalkulator Standar - Tugas Web 1</title>
+    <style>
+        /* --- Gaya sederhana, tidak berlebihan, kesan mahasiswa --- */
+        * {
+            box-sizing: border-box;
+            user-select: none; /* menghindari teks terblok saat klik cepat */
+        }
+
+        body {
+            background: #d9d2b0;  /* latar belakang netral, sedikit hangat */
+            font-family: 'Segoe UI', 'Roboto', 'Lucida Grande', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* container kalkulator - tidak terlalu mewah, border biasa */
+        .kalkulator {
+            max-width: 420px;
+            width: 100%;
+            background: #f5f0e6;    /* krem lembut, klasik */
+            border-radius: 14px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 18px 16px 22px 16px;
+            border: 1px solid #b9aa82;
+        }
+
+        /* layar display */
+        .layar {
+            background: #fff9ef;
+            border: 1px solid #cbbf9a;
+            border-radius: 12px;
+            padding: 18px 14px;
+            margin-bottom: 24px;
+            text-align: right;
+            font-size: 2.6rem;
+            font-weight: 500;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            letter-spacing: 2px;
+            color: #2c2b26;
+            word-wrap: break-word;
+            word-break: break-all;
+            min-height: 90px;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        /* grid tombol */
+        .tombol-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px 10px;
+        }
+
+        /* gaya tombol umum */
+        .btn {
+            background: #eae3d4;
+            border: 1px solid #cdbc9a;
+            border-radius: 32px;   /* bentuk sedikit membulat, tidak terlalu kotak */
+            padding: 16px 0;
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.05s linear;
+            color: #2f2e2a;
+            font-family: inherit;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* efek klik / hover sederhana */
+        .btn:active {
+            transform: scale(0.97);
+            background: #d7cdb7;
+            border-color: #b0a07e;
+        }
+
+        /* tombol angka sedikit beda background */
+        .btn-angka {
+            background: #fef9ef;
+            font-weight: 600;
+        }
+
+        /* tombol operator (+, -, *, /) warna sedikit kontras, tidak mencolok */
+        .btn-operator {
+            background: #e0d5c0;
+            font-weight: 700;
+            color: #3a3320;
+        }
+
+        /* tombol clear (C) dan backspace (←) warna netral */
+        .btn-fungsi {
+            background: #d9cdb2;
+            font-weight: 600;
+            color: #2f2b20;
+        }
+
+        /* tombol sama dengan (=) warna agak beda tapi tetap sederhana */
+        .btn-sama {
+            background: #cfc294;
+            font-weight: bold;
+            color: #1f1c14;
+            border-color: #b3a06e;
+        }
+
+        /* tombol 0 yang melebar 2 kolom */
+        .btn-lebar {
+            grid-column: span 2;
+        }
+
+        /* hover efek minimal tanpa animasi berlebihan */
+        .btn:hover {
+            background: #ddd0b6;
+            border-color: #b29f77;
+        }
+
+        .btn-angka:hover {
+            background: #f3e9db;
+        }
+
+        .btn-sama:hover {
+            background: #c2b383;
+        }
+
+        /* footer kecil biar tidak terlihat kosong (opsional) */
+        .credit {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: #8a7a5a;
+            border-top: 1px solid #dbcfb4;
+            padding-top: 12px;
+        }
+
+        /* responsif untuk layar kecil */
+        @media (max-width: 480px) {
+            .kalkulator {
+                padding: 14px 12px 18px;
+            }
+            .btn {
+                padding: 12px 0;
+                font-size: 1.3rem;
+            }
+            .layar {
+                font-size: 2rem;
+                padding: 14px 12px;
+            }
+            .tombol-grid {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="kalkulator">
+    <!-- tampilan display ekspresi / hasil -->
+    <div class="layar" id="display">0</div>
+
+    <!-- susunan tombol kalkulator standar (tanpa persen, tanpa efek mewah) -->
+    <div class="tombol-grid" id="tombolContainer">
+        <!-- baris 1: fungsi clear, backspace, bagi, kali -->
+        <div class="btn btn-fungsi" data-action="clear">C</div>
+        <div class="btn btn-fungsi" data-action="backspace">←</div>
+        <div class="btn btn-operator" data-op="/">÷</div>
+        <div class="btn btn-operator" data-op="*">×</div>
+
+        <!-- baris 2: 7,8,9, minus -->
+        <div class="btn btn-angka" data-num="7">7</div>
+        <div class="btn btn-angka" data-num="8">8</div>
+        <div class="btn btn-angka" data-num="9">9</div>
+        <div class="btn btn-operator" data-op="-">-</div>
+
+        <!-- baris 3: 4,5,6, plus -->
+        <div class="btn btn-angka" data-num="4">4</div>
+        <div class="btn btn-angka" data-num="5">5</div>
+        <div class="btn btn-angka" data-num="6">6</div>
+        <div class="btn btn-operator" data-op="+">+</div>
+
+        <!-- baris 4: 1,2,3, sama dengan -->
+        <div class="btn btn-angka" data-num="1">1</div>
+        <div class="btn btn-angka" data-num="2">2</div>
+        <div class="btn btn-angka" data-num="3">3</div>
+        <div class="btn btn-sama" data-action="equal">=</div>
+
+        <!-- baris 5: 0 (lebar 2 kolom), titik desimal, dan sudah ada = di atas, tetapi kita biarkan rapi -->
+        <div class="btn btn-angka btn-lebar" data-num="0">0</div>
+        <div class="btn btn-angka" data-num=".">.</div>
+        <!-- sisa satu kolom, biarkan kosong agar tidak ada tombol berlebih (tampilan bersih) -->
+        <div style="visibility: hidden;"></div>
+    </div>
+    <div class="credit">[ tugas pemrograman web 1 - kalkulator ]</div>
+</div>
+
+<script>
+    // ---------- state kalkulator ----------
+    let currentExpression = "";     // menyimpan ekspresi yg tampil (contoh "12+3.5")
+    let lastResultMode = false;     // true jika setelah "=" dan menampilkan hasil
+    let lastErrorFlag = false;      // untuk mencegah error berantai
+
+    // DOM elements
+    const displayDiv = document.getElementById("display");
+
+    // ----- helper update tampilan utama -----
+    function updateDisplay() {
+        if (currentExpression === "") {
+            displayDiv.innerText = "0";
+        } else {
+            // batasi panjang tampilan agar tidak overflow (tapi biarkan saja)
+            let showExpr = currentExpression;
+            if (showExpr.length > 28) {
+                showExpr = "..." + showExpr.slice(-25);
+            }
+            displayDiv.innerText = showExpr;
+        }
+    }
+
+    // ----- bersihkan semua (reset total) -----
+    function clearAll() {
+        currentExpression = "";
+        lastResultMode = false;
+        lastErrorFlag = false;
+        updateDisplay();
+    }
+
+    // ----- hapus 1 karakter terakhir (backspace) -----
+    function handleBackspace() {
+        // Jika sedang dalam mode hasil (setelah =) maka backspace akan mereset ke kondisi kosong (seperti clear)
+        if (lastResultMode) {
+            clearAll();
+            return;
+        }
+        if (currentExpression.length > 0) {
+            currentExpression = currentExpression.slice(0, -1);
+        }
+        // jika habis dihapus semua, set ke kosong
+        if (currentExpression === "") {
+            updateDisplay();
+        } else {
+            updateDisplay();
+        }
+        lastErrorFlag = false;
+    }
+
+    // ----- fungsi evaluasi ekspresi dengan aman (hanya angka, operator dasar, titik) -----
+    function evaluateExpression(expr) {
+        // bersihkan spasi tak perlu (walau tak ada spasi, aman)
+        let cleanExpr = expr.trim();
+        if (cleanExpr === "") return null;
+
+        // filter: hanya boleh angka 0-9, operator + - * / , titik ., dan spasi (spasi aman)
+        // tapi karena ekspresi kita bisa mengandung tanda negatif? untuk kalkulator sederhana,
+        // yang diinput adalah angka positif dan operator, jadi aman. 
+        // Namun jika ekspresi diawali dengan operator? tidak akan terjadi karena kita cegah.
+        // juga cegah karakter ganda berbahaya.
+        const allowedPattern = /^[0-9+\-*/.]+$/;   // hanya karakter yang diperbolehkan (plus, minus, kali, bagi, titik, angka)
+        if (!allowedPattern.test(cleanExpr)) {
+            return null;
+        }
+
+        // kasus khusus : ekspresi berakhir dengan operator (tidak valid untuk eval)
+        if (/[+\-*/]$/.test(cleanExpr)) {
+            return null;
+        }
+        // cegah pembagian dengan nol secara manual? tetap diserahkan ke eval, nanti error akan tertangkap.
+        try {
+            // gunakan Function untuk menghindari beberapa keanehan eval, lebih modern
+            // namun kita tetap hati-hati, ekspresi sudah difilter.
+            // eslint-disable-next-line no-new-func
+            const result = Function('"use strict";return (' + cleanExpr + ')')();
+            // cek jika hasil number tak terhingga (infinity karena bagi 0)
+            if (!isFinite(result)) {
+                return null;  // error tak terhingga / infinity
+            }
+            // bulatkan hasil jika desimal terlalu panjang, tapi biarkan sesuai kebutuhan
+            // (opsional) batasi hingga 12 digit desimal agar tampilan rapi
+            if (typeof result === 'number' && !Number.isInteger(result)) {
+                // hindari scientific notation terlalu panjang, pangkas desimal maks 10 digit
+                return parseFloat(result.toFixed(10));
+            }
+            return result;
+        } catch (e) {
+            console.warn("Eval error:", e);
+            return null;
+        }
+    }
+
+    // ----- proses tombol sama dengan (=) -----
+    function handleEqual() {
+        // jika dalam kondisi error, bersihkan dulu
+        if (lastErrorFlag) {
+            clearAll();
+            return;
+        }
+
+        // kalau ekspresi kosong, tidak usah dihitung
+        if (currentExpression === "") {
+            return;
+        }
+
+        // kasus terakhir karakter adalah operator, maka hapus operator tersebut biar aman
+        let exprToEval = currentExpression;
+        if (/[+\-*/]$/.test(exprToEval)) {
+            exprToEval = exprToEval.slice(0, -1);
+            if (exprToEval === "") {
+                return;
+            }
+        }
+
+        const hasil = evaluateExpression(exprToEval);
+        if (hasil === null) {
+            // jika error tampilkan pesan error sederhana
+            displayDiv.innerText = "Error";
+            currentExpression = "";
+            lastResultMode = true;
+            lastErrorFlag = true;
+            // setelah error, setiap tombol angka akan mereset (di handler)
+            return;
+        }
+
+        // hasil numeric, konversi ke string (tanpa trailing .0 jika integer)
+        let hasilString = "";
+        if (Number.isInteger(hasil)) {
+            hasilString = hasil.toString();
+        } else {
+            // hilangkan angka nol tak perlu di belakang desimal
+            hasilString = parseFloat(hasil.toFixed(10)).toString();
+        }
+
+        // update state
+        currentExpression = hasilString;
+        lastResultMode = true;
+        lastErrorFlag = false;
+        updateDisplay();
+    }
+
+    // ----- menambah angka / titik ke ekspresi -----
+    function appendNumber(numberStr) {
+        // jika dalam kondisi error, tekan angka akan mereset semuanya
+        if (lastErrorFlag) {
+            clearAll();
+            lastErrorFlag = false;
+        }
+
+        // jika sedang dalam mode hasil (setelah '='), menekan angka akan memulai ekspresi baru
+        if (lastResultMode) {
+            currentExpression = "";
+            lastResultMode = false;
+        }
+
+        // cegah penambahan titik ganda pada angka terakhir (tidak boleh . muncul dua kali pada operand terakhir)
+        if (numberStr === ".") {
+            // cek apakah di bagian angka terakhir sudah ada titik
+            // ambil token terakhir (angka terakhir setelah operator)
+            const lastToken = getLastNumberFromExpression(currentExpression);
+            if (lastToken.includes(".")) {
+                // sudah ada titik di angka terakhir, tidak boleh tambah titik lagi
+                return;
+            }
+            // jika ekspresi kosong, tambahkan "0."
+            if (currentExpression === "") {
+                currentExpression = "0.";
+                updateDisplay();
+                return;
+            }
+            // jika ekspresi berakhir dengan operator, maka tambahkan "0."
+            if (/[+\-*/]$/.test(currentExpression)) {
+                currentExpression += "0.";
+                updateDisplay();
+                return;
+            }
+        }
+
+        // untuk angka biasa (0-9), cegah leading zeros tidak perlu
+        if (numberStr !== ".") {
+            // cegah angka nol berulang di depan jika belum ada operator / titik
+            // contoh: ekspresi "0" lalu tekan "5" -> menjadi "5" bukan "05"
+            if (currentExpression === "0" && !lastResultMode) {
+                currentExpression = numberStr;
+                updateDisplay();
+                return;
+            }
+            // jika ekspresi kosong dan menekan 0, tampilkan "0"
+            if (currentExpression === "" && numberStr === "0") {
+                currentExpression = "0";
+                updateDisplay();
+                return;
+            }
+        }
+
+        // kasus normal: tambahkan karakter
+        currentExpression += numberStr;
+        updateDisplay();
+    }
+
+    // helper: mengambil angka terakhir dari ekspresi (setelah operator terakhir)
+    function getLastNumberFromExpression(expr) {
+        if (expr === "") return "";
+        // split dengan operator + - * /, tapi perlu hati-hati karena minus bisa juga negatif?
+        // namun pada kalkulator sederhana tidak ada angka negatif input manual, jadi aman
+        const operators = /[+\-*/]/;
+        let lastIdx = -1;
+        for (let i = expr.length - 1; i >= 0; i--) {
+            if (operators.test(expr[i])) {
+                lastIdx = i;
+                break;
+            }
+        }
+        if (lastIdx === -1) return expr;
+        return expr.slice(lastIdx + 1);
+    }
+
+    // ----- menambah operator (+, -, *, /) -----
+    function appendOperator(op) {
+        // jika dalam mode error, tekan operator akan reset dulu lalu mulai dengan "0" + operator
+        if (lastErrorFlag) {
+            clearAll();
+            lastErrorFlag = false;
+        }
+
+        // jika sedang mode hasil (setelah =) maka kita akan menggunakan hasil tsb sebagai operand pertama
+        if (lastResultMode) {
+            // hasil sudah tersimpan di currentExpression (misal "12")
+            // kita ingin lanjut operasi: "12 + " 
+            // pastikan tidak double operator
+            lastResultMode = false;
+            // ekspresi sekarang berisi hasil, langsung tambah operator di belakang
+            if (currentExpression !== "" && !isNaN(parseFloat(currentExpression))) {
+                currentExpression += op;
+                updateDisplay();
+                return;
+            } else {
+                // jika aneh, reset
+                currentExpression = "0" + op;
+                updateDisplay();
+                return;
+            }
+        }
+
+        // kondisi normal: cegah operator berurutan
+        if (currentExpression === "") {
+            // kalau masih kosong, tambahkan awalan 0 + operator, misal tekan '+' jadi "0+"
+            currentExpression = "0" + op;
+            updateDisplay();
+            return;
+        }
+
+        // cek apakah karakter terakhir adalah operator
+        const lastChar = currentExpression[currentExpression.length - 1];
+        if (lastChar === '+' || lastChar === '-' || lastChar === '*' || lastChar === '/') {
+            // replace operator lama dengan yang baru
+            currentExpression = currentExpression.slice(0, -1) + op;
+            updateDisplay();
+            return;
+        }
+
+        // jika ekspresi valid, langsung tambahkan operator
+        currentExpression += op;
+        updateDisplay();
+    }
+
+    // ----- event handler utama untuk semua tombol (delegasi) -----
+    function onTombolClick(e) {
+        let target = e.target;
+        // pastikan yang diklik adalah elemen dengan class .btn
+        if (!target.classList || !target.classList.contains("btn")) return;
+
+        // cek atribut data-num (angka / titik)
+        const numVal = target.getAttribute("data-num");
+        if (numVal !== null) {
+            appendNumber(numVal);
+            return;
+        }
+
+        // cek atribut data-op (operator)
+        const opVal = target.getAttribute("data-op");
+        if (opVal !== null) {
+            // mapping simbol tampilan × dan ÷ ke operator asli * dan /
+            let realOp = opVal;
+            if (opVal === "×") realOp = "*";
+            if (opVal === "÷") realOp = "/";
+            appendOperator(realOp);
+            return;
+        }
+
+        // action: clear, backspace, equal
+        const action = target.getAttribute("data-action");
+        if (action === "clear") {
+            clearAll();
+        } else if (action === "backspace") {
+            handleBackspace();
+        } else if (action === "equal") {
+            handleEqual();
+        }
+    }
+
+    // pasang event listener ke container tombol (event delegation)
+    const container = document.getElementById("tombolContainer");
+    container.addEventListener("click", onTombolClick);
+
+    // menambahkan shortcut untuk keyboard
+    function handleKeyboard(event) {
+        const key = event.key;
+        // angka 0-9 atau titik
+        if (/[0-9]/.test(key)) {
+            event.preventDefault();
+            appendNumber(key);
+        } else if (key === ".") {
+            event.preventDefault();
+            appendNumber(".");
+        } else if (key === "+") {
+            event.preventDefault();
+            appendOperator("+");
+        } else if (key === "-") {
+            event.preventDefault();
+            appendOperator("-");
+        } else if (key === "*") {
+            event.preventDefault();
+            appendOperator("*");
+        } else if (key === "/") {
+            event.preventDefault();
+            appendOperator("/");
+        } else if (key === "Enter" || key === "=") {
+            event.preventDefault();
+            handleEqual();
+        } else if (key === "Backspace") {
+            event.preventDefault();
+            handleBackspace();
+        } else if (key === "Escape" || key === "Delete") {
+            event.preventDefault();
+            clearAll();
+        } else if (key === "c" || key === "C") {
+            event.preventDefault();
+            clearAll();
+        }
+    }
+
+    window.addEventListener("keydown", handleKeyboard);
+
+    // inisialisasi tampilan awal "0"
+    clearAll();
+    // sedikit sentuhan: jika ingin tampilan awal tidak error
+    lastErrorFlag = false;
+</script>
+</body>
+</html>

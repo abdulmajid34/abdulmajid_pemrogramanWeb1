@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="color: blue; text-align: center; font-family: Arial, sans-serif;">TUGAS IF ELSE KOMPLEKS PEMROGRAMAN WEB 1 - PERTEMUAN 13</h1>
+    <script>
+        /**
+         * MIND MAPPING ALGORITMA IF ELSE
+         * 1. define variabel uangBelanja = 150000
+         * 2. define variabel totalBelanja = 120000
+         * 3. define variabel kembalian = 0
+         * 4. define variabel responPelanggan = false
+         * 5. IF1: jika uangBelanja > totalBelanja, maka kembalian = uangBelanja - totalBelanja dan tampilkan: "berikut kembaliannya: kembalian"
+         * 6. IF2: jika terdapat uang kembalian, berikan kondisi dengan variabel responsPelanggan apakah uang kembalian nya akan didonasikan sebagian, 
+         *      - jika "iya" maka tampilkan: "terima kasih atas donasinya"
+         *      - jika "tidak" maka tampilkan: "terima kasih sudah berbelanja"
+         *      - jika tidak memberikan jawaban maka lanjutkan
+         * 7. IF3: jika tidak terdapat uang kembalian, tampilkan: "terima kasih sudah berbelanja"
+         * 8. IF4: jika uangBelanja < totalBelanja, maka tampilkan: "uang anda kurang"
+         * 9. tampilkan total yang harus dibayar adalah: totalBelanja dan total yang dibayar adalah: uangBelanja
+         * 10. tampilkan output: total yang harus dibayar adalah: " + totalBelanja & "total yang dibayar dengan uang belanja adalah: " + uangBelanja
+        */
+
+        let uangBelanja = 150000;
+        let totalBelanja = 120000;
+        let kembalian = 0;
+        let responPelanggan = false;
+
+        // IF1
+        if(uangBelanja > totalBelanja) {
+            kembalian = uangBelanja - totalBelanja;
+            console.log("berikut kembaliannya: " + kembalian);
+
+            // IF2
+            if(kembalian > 0) {
+                if(responPelanggan) {
+                    console.log("terima kasih atas donasinya");
+                } else {
+                    console.log("terima kasih sudah berbelanja");
+                }
+            }
+        } 
+
+        // IF3
+        if(uangBelanja === totalBelanja) {
+            console.log("terima kasih sudah berbelanja");
+        }
+
+        // IF4
+        if(uangBelanja < totalBelanja) {
+            console.log("uang anda kurang");
+        }
+
+        // menampilkan total yang harus dibayar dan total yang dibayar
+        console.log("total yang harus dibayar adalah: " + totalBelanja);
+        console.log("total yang dibayar dengan uang belanja adalah: " + uangBelanja);
+    </script>
+</body>
+</html>
