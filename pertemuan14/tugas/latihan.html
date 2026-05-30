@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Akademik | Manajemen Data Mahasiswa</title>
+    <!-- Google Fonts: Plus Jakarta Sans untuk Tipografi Modern -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           1. DESIGN SYSTEM & CSS VARIABLES
+           ========================================== */
+        :root {
+            /* Palette Warna Gelap Premium */
+            --bg-body: #090d16;
+            --bg-surface: rgba(17, 24, 43, 0.7);
+            --bg-surface-hover: rgba(23, 33, 58, 0.85);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-color-focus: rgba(99, 102, 241, 0.5);
+            
+            /* Warna Teks */
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            
+            /* Warna Aksen & Status */
+            --primary: #6366f1;         /* Indigo */
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            --primary-glow: rgba(99, 102, 241, 0.2);
+            
+            --secondary: #10b981;       /* Emerald Green untuk Tambah */
+            --secondary-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --secondary-glow: rgba(16, 185, 129, 0.2);
+            
+            --warning: #f59e0b;         /* Amber untuk Edit/Warning */
+            --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --warning-glow: rgba(245, 158, 11, 0.2);
+            
+            --danger: #ef4444;          /* Rose untuk Hapus/Error */
+            --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            --danger-glow: rgba(239, 68, 68, 0.2);
+            
+            --info: #06b6d4;            /* Cyan untuk Update */
+            --info-gradient: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --info-glow: rgba(6, 182, 212, 0.2);
+
+            --neutral: #374151;         /* Slate untuk Batal */
+            --neutral-gradient: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            
+            /* Efek & Ukuran */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================
+           2. BASE STYLES & LAYOUT
+           ========================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(217, 70, 239, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* ==========================================
+           3. APP HEADER
+           ========================================== */
+        .app-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .app-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: linear-gradient(to right, #ffffff, #a5b4fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .badge-pert14 {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        /* ==========================================
+           4. DASHBOARD STATS WIDGETS
+           ========================================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-premium);
+            backdrop-filter: blur(16px);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.02), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .stat-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.8);
+        }
+
+        .stat-info h3 {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-info .stat-number {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        /* Dinamis ikon warna */
+        .stat-card.total-students .stat-icon {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        .stat-card.total-faculties .stat-icon {
+            color: var(--info);
+            background: rgba(6, 182, 212, 0.1);
+        }
+        .stat-card.total-majors .stat-icon {
+            color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        /* ==========================================
+           5. DASHBOARD MAIN CONTENT GRID
+           ========================================== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 380px 1fr;
+            }
+        }
+
+        /* Glassmorphism Panel */
+        .panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-premium);
+            backdrop-filter: blur(20px);
+            transition: var(--transition);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .panel:hover {
+            border-color: rgba(255, 255, 255, 0.09);
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 0.75rem;
+        }
+
+        .panel-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+
+        /* ==========================================
+           6. FORM STYLING
+           ========================================== */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(10, 15, 30, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem;
+            font-family: var(--font-family);
+            font-size: 0.925rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+            background: rgba(10, 15, 30, 0.8);
+        }
+
+        /* Validasi visual sederhana */
+        .form-control:invalid.dirty {
+            border-color: var(--danger);
+            box-shadow: 0 0 0 4px var(--danger-glow);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-top: 1.75rem;
+        }
+
+        .btn-group.edit-mode {
+            grid-template-columns: 2fr 1fr;
+        }
+
+        .btn {
+            font-family: var(--font-family);
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--secondary-gradient);
+            box-shadow: 0 4px 14px var(--secondary-glow);
+        }
+        
+        .btn-update {
+            background: var(--info-gradient);
+            box-shadow: 0 4px 14px var(--info-glow);
+        }
+
+        .btn-cancel {
+            background: var(--neutral-gradient);
+        }
+
+        /* ==========================================
+           7. SEARCH & FILTER CONTROLS
+           ========================================== */
+        .table-header-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        @media (min-width: 640px) {
+            .table-header-controls {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding-left: 2.5rem;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* ==========================================
+           8. DATA TABLE STYLING
+           ========================================== */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: rgba(10, 15, 30, 0.3);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .custom-table th {
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text-secondary);
+            font-weight: 700;
+            padding: 1rem 1.25rem;
+            border-bottom: 2px solid var(--border-color);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .custom-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .custom-table tbody tr {
+            transition: var(--transition);
+        }
+
+        .custom-table tbody tr:hover {
+            background: var(--bg-surface-hover);
+        }
+
+        .custom-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Table cell values styles */
+        .td-nim {
+            font-family: monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #a5b4fc;
+        }
+
+        .td-nama {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .badge-fakultas {
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.12);
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            color: #67e8f9;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-jurusan {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            color: #fde047;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #ffffff;
+        }
+
+        .btn-icon-edit {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+        }
+
+        .btn-icon-edit:hover {
+            background: var(--warning-gradient);
+            color: white;
+            box-shadow: 0 0 10px var(--warning-glow);
+        }
+
+        .btn-icon-delete {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .btn-icon-delete:hover {
+            background: var(--danger-gradient);
+            color: white;
+            box-shadow: 0 0 10px var(--danger-glow);
+        }
+
+        .btn-icon svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        /* ==========================================
+           9. TOAST NOTIFICATIONS
+           ========================================== */
+        #toast-container {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(17, 24, 39, 0.9);
+            border-left: 4px solid var(--primary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            padding: 0.875rem 1.25rem;
+            border-radius: 6px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 280px;
+            max-width: 400px;
+            backdrop-filter: blur(12px);
+            pointer-events: auto;
+            transform: translateX(120%);
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: var(--transition);
+        }
+
+        .toast.toast-success { border-left-color: var(--secondary); }
+        .toast.toast-danger { border-left-color: var(--danger); }
+        .toast.toast-warning { border-left-color: var(--warning); }
+        .toast.toast-info { border-left-color: var(--info); }
+
+        .toast-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .toast-success .toast-icon { background: rgba(16, 185, 129, 0.15); color: var(--secondary); }
+        .toast-danger .toast-icon { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .toast-warning .toast-icon { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .toast-info .toast-icon { background: rgba(6, 182, 212, 0.15); color: var(--info); }
+
+        .toast-message {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+
+        /* ==========================================
+           10. CUSTOM MODAL CONFIRMATION
+           ========================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: var(--shadow-premium);
+            transform: scale(0.9);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-warning-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-warning-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .modal h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        /* ==========================================
+           11. KEYFRAME ANIMATIONS
+           ========================================== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(120%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- 1. Header Aplikasi -->
+    <header class="app-header">
+        <span class="badge-pert14">Tugas Praktikum 14</span>
+        <h1>Sistem Informasi Akademik</h1>
+        <p>Aplikasi CRUD Data Mahasiswa Berbasis Array of Objects & LocalStorage</p>
+    </header>
+
+    <!-- 2. Grid Statistik Dasbor -->
+    <section class="stats-grid">
+        <div class="stat-card total-students">
+            <div class="stat-info">
+                <h3>Total Mahasiswa</h3>
+                <div class="stat-number" id="stat-total-mahasiswa">0</div>
+            </div>
+            <div class="stat-icon">
+                <!-- User Group Icon SVG -->
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+        </div>
+        <div class="stat-card total-faculties">
+            <div class="stat-info">
+                <h3>Total Fakultas</h3>
+                <div class="stat-number" id="stat-total-fakultas">0</div>
+            </div>
+            <div class="stat-icon">
+                <!-- School/Building Icon SVG -->
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+        </div>
+        <div class="stat-card total-majors">
+            <div class="stat-info">
+                <h3>Total Jurusan</h3>
+                <div class="stat-number" id="stat-total-jurusan">0</div>
+            </div>
+            <div class="stat-icon">
+                <!-- Academic Cap Icon SVG -->
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6"/></svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Workspace Layout Dashboard -->
+    <div class="dashboard-grid">
+        
+        <!-- KOLOM KIRI: FORMULIR INPUT MAHASISWA -->
+        <aside class="panel" id="form-panel">
+            <h2 class="panel-title" id="form-title">
+                <!-- User Plus Icon SVG -->
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" id="form-title-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                <span>Form Input Mahasiswa</span>
+            </h2>
+            
+            <form id="mahasiswa-form" onsubmit="handleFormSubmit(event)" novalidate>
+                <!-- NIM -->
+                <div class="form-group">
+                    <label for="input-nim" class="form-label">NIM (Nomor Induk Mahasiswa)</label>
+                    <input type="text" id="input-nim" class="form-control" placeholder="Contoh: 231011450500" required pattern="[0-9]+" maxlength="15" onblur="validateInput(this)">
+                </div>
+
+                <!-- NAMA -->
+                <div class="form-group">
+                    <label for="input-nama" class="form-label">Nama Lengkap</label>
+                    <input type="text" id="input-nama" class="form-control" placeholder="Contoh: Abdul Majid" required onblur="validateInput(this)">
+                </div>
+
+                <!-- FAKULTAS -->
+                <div class="form-group">
+                    <label for="input-fakultas" class="form-label">Fakultas</label>
+                    <input type="text" id="input-fakultas" class="form-control" placeholder="Contoh: Ilmu Komputer" required onblur="validateInput(this)">
+                </div>
+
+                <!-- JURUSAN -->
+                <div class="form-group">
+                    <label for="input-jurusan" class="form-label">Jurusan</label>
+                    <input type="text" id="input-jurusan" class="form-control" placeholder="Contoh: Teknik Informatika" required onblur="validateInput(this)">
+                </div>
+
+                <!-- Tombol Dinamis -->
+                <div class="btn-group" id="form-actions">
+                    <button type="submit" class="btn btn-primary" id="btn-submit-main">
+                        <!-- Plus icon SVG -->
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                        <span>Tambah Data</span>
+                    </button>
+                </div>
+            </form>
+        </aside>
+
+        <!-- KOLOM KANAN: DAFTAR DATA MAHASISWA (TABEL) -->
+        <main class="panel">
+            <div class="table-header-controls">
+                <h2 class="panel-title" style="margin-bottom: 0; border: none; padding-bottom: 0;">
+                    <!-- Database Icon SVG -->
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                    <span>Daftar Mahasiswa</span>
+                </h2>
+                
+                <!-- Pencarian Instan -->
+                <div class="search-box">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" id="search-input" class="form-control" placeholder="Cari mahasiswa..." oninput="handleSearch()">
+                </div>
+            </div>
+
+            <!-- Kontainer Tabel -->
+            <div class="table-container">
+                <table class="custom-table" id="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px; text-align: center;">No</th>
+                            <th>NIM</th>
+                            <th>Nama Lengkap</th>
+                            <th>Fakultas</th>
+                            <th>Jurusan</th>
+                            <th style="width: 100px; text-align: center;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Data dimasukkan secara dinamis lewat JS -->
+                    </tbody>
+                </table>
+                <div id="table-empty-state" class="empty-state" style="display: none;">
+                    <!-- Clipboard/Empty Icon SVG -->
+                    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <h4>Belum Ada Data</h4>
+                    <p>Silakan isi formulir di samping untuk menambahkan data mahasiswa baru.</p>
+                </div>
+            </div>
+        </main>
+        
+    </div>
+
+</div>
+
+<!-- 4. Kontainer Toast Notification (Dibuat otomatis/Dikelola lewat JS) -->
+<div id="toast-container"></div>
+
+<!-- 5. Modal Konfirmasi Hapus Kustom -->
+<div class="modal-overlay" id="confirm-modal-overlay">
+    <div class="modal">
+        <div class="modal-warning-icon">
+            <!-- Alert Triangle Icon SVG -->
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </div>
+        <h3 id="modal-title">Hapus Data Mahasiswa?</h3>
+        <p id="modal-desc">Tindakan ini tidak dapat dibatalkan. Data mahasiswa ini akan dihapus secara permanen dari sistem dan penyimpanan localstorage.</p>
+        <div class="modal-buttons">
+            <button class="btn btn-cancel" onclick="closeConfirmModal()">Batal</button>
+            <button class="btn" style="background: var(--danger-gradient); box-shadow: 0 4px 14px var(--danger-glow);" id="modal-confirm-btn">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     12. JAVASCRIPT STATE ENGINE & CRUD
+     ========================================== -->
+<script>
+    // -------------------------------------------------------------
+    // Global State & Inisialisasi
+    // -------------------------------------------------------------
+    let mahasiswaList = [];
+    let isEditMode = false;
+    let editTargetId = null;
+    let deleteTargetId = null;
+
+    // Dummy Data Awal yang Cantik (jika localStorage kosong)
+    const initialDummyData = [
+        {
+            id: "mahasiswa-1",
+            nim: "231011450500",
+            nama: "Abdul Majid",
+            fakultas: "Ilmu Komputer",
+            jurusan: "Teknik Informatika"
+        },
+        {
+            id: "mahasiswa-2",
+            nim: "231011450501",
+            nama: "Ahmad Rizky",
+            fakultas: "Ekonomi dan Bisnis",
+            jurusan: "Manajemen"
+        },
+        {
+            id: "mahasiswa-3",
+            nim: "231011450502",
+            nama: "Siti Aminah",
+            fakultas: "Ilmu Sosial dan Ilmu Politik",
+            jurusan: "Ilmu Komunikasi"
+        }
+    ];
+
+    // Elemen DOM Penting
+    const formElement = document.getElementById('mahasiswa-form');
+    const inputNim = document.getElementById('input-nim');
+    const inputNama = document.getElementById('input-nama');
+    const inputFakultas = document.getElementById('input-fakultas');
+    const inputJurusan = document.getElementById('input-jurusan');
+    const btnSubmitMain = document.getElementById('btn-submit-main');
+    const formActions = document.getElementById('form-actions');
+    const formTitle = document.getElementById('form-title');
+    const formTitleIcon = document.getElementById('form-title-icon');
+    const formPanel = document.getElementById('form-panel');
+    const tableBody = document.getElementById('table-body');
+    const emptyState = document.getElementById('table-empty-state');
+    const searchInput = document.getElementById('search-input');
+    
+    // Elemen Statistik
+    const statTotalMahasiswa = document.getElementById('stat-total-mahasiswa');
+    const statTotalFakultas = document.getElementById('stat-total-fakultas');
+    const statTotalJurusan = document.getElementById('stat-total-jurusan');
+
+    // Elemen Modal
+    const confirmModal = document.getElementById('confirm-modal-overlay');
+    const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+
+    // -------------------------------------------------------------
+    // Fungsi Siklus Hidup Aplikasi (App Lifecycle)
+    // -------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+        loadDataFromStorage();
+        renderTable();
+        updateStats();
+    });
+
+    // -------------------------------------------------------------
+    // Fungsi Manajemen Data & LocalStorage
+    // -------------------------------------------------------------
+    function loadDataFromStorage() {
+        const storedData = localStorage.getItem('mahasiswa_data');
+        if (storedData) {
+            try {
+                mahasiswaList = JSON.parse(storedData);
+            } catch (e) {
+                console.error("Gagal mengurai data localstorage, memuat data default.", e);
+                mahasiswaList = [...initialDummyData];
+                saveDataToStorage();
+            }
+        } else {
+            // Inisialisasi awal dengan data dummy
+            mahasiswaList = [...initialDummyData];
+            saveDataToStorage();
+            showToast("Memuat data contoh mahasiswa.", "info");
+        }
+    }
+
+    function saveDataToStorage() {
+        localStorage.setItem('mahasiswa_data', JSON.stringify(mahasiswaList));
+    }
+
+    // -------------------------------------------------------------
+    // Fungsi Rendering UI & Statistik
+    // -------------------------------------------------------------
+    function renderTable(filterQuery = '') {
+        tableBody.innerHTML = '';
+        const query = filterQuery.toLowerCase().trim();
+        
+        // Filter data berdasarkan input pencarian
+        const filteredData = mahasiswaList.filter(item => {
+            return (
+                item.nim.toLowerCase().includes(query) ||
+                item.nama.toLowerCase().includes(query) ||
+                item.fakultas.toLowerCase().includes(query) ||
+                item.jurusan.toLowerCase().includes(query)
+            );
+        });
+
+        if (filteredData.length === 0) {
+            emptyState.style.display = 'block';
+            document.getElementById('data-table').style.display = 'none';
+        } else {
+            emptyState.style.display = 'none';
+            document.getElementById('data-table').style.display = 'table';
+            
+            filteredData.forEach((mahasiswa, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="text-align: center; font-weight: 600; color: var(--text-muted);">${index + 1}</td>
+                    <td class="td-nim">${escapeHTML(mahasiswa.nim)}</td>
+                    <td class="td-nama">${escapeHTML(mahasiswa.nama)}</td>
+                    <td><span class="badge-fakultas">${escapeHTML(mahasiswa.fakultas)}</span></td>
+                    <td><span class="badge-jurusan">${escapeHTML(mahasiswa.jurusan)}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn-icon btn-icon-edit" onclick="initiateEdit('${mahasiswa.id}')" title="Edit Data">
+                                <!-- Edit Icon SVG -->
+                                <svg viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.829z"/></svg>
+                            </button>
+                            <button class="btn-icon btn-icon-delete" onclick="confirmDelete('${mahasiswa.id}')" title="Hapus Data">
+                                <!-- Trash Icon SVG -->
+                                <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    }
+
+    function updateStats() {
+        // Total Mahasiswa
+        statTotalMahasiswa.textContent = mahasiswaList.length;
+
+        // Total Fakultas Unik
+        const unikFakultas = new Set(mahasiswaList.map(item => item.fakultas.toLowerCase().trim()));
+        statTotalFakultas.textContent = mahasiswaList.length > 0 ? unikFakultas.size : 0;
+
+        // Total Jurusan Unik
+        const unikJurusan = new Set(mahasiswaList.map(item => item.jurusan.toLowerCase().trim()));
+        statTotalJurusan.textContent = mahasiswaList.length > 0 ? unikJurusan.size : 0;
+    }
+
+    // -------------------------------------------------------------
+    // Fungsi Validasi & Event Handler Form
+    // -------------------------------------------------------------
+    function validateInput(input) {
+        input.classList.add('dirty');
+        if (!input.checkValidity()) {
+            if (input.validity.valueMissing) {
+                // Diabaikan karena browser memiliki penanganan default, 
+                // namun kita bisa menambahkan error styling
+            }
+        }
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        
+        // Memicu validasi di semua input
+        const inputs = formElement.querySelectorAll('input');
+        let isValid = true;
+        inputs.forEach(input => {
+            input.classList.add('dirty');
+            if (!input.checkValidity()) {
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            showToast("Harap isi semua kolom formulir dengan benar!", "danger");
+            return;
+        }
+
+        const nimValue = inputNim.value.trim();
+        const namaValue = inputNama.value.trim();
+        const fakultasValue = inputFakultas.value.trim();
+        const jurusanValue = inputJurusan.value.trim();
+
+        // Cek validasi NIM angka saja
+        if (!/^\d+$/.test(nimValue)) {
+            showToast("NIM hanya boleh berisi angka!", "danger");
+            inputNim.focus();
+            return;
+        }
+
+        if (isEditMode) {
+            // Mode Update
+            // Pastikan NIM tidak bentrok dengan data lain
+            const nimExits = mahasiswaList.some(item => item.nim === nimValue && item.id !== editTargetId);
+            if (nimExits) {
+                showToast(`NIM ${nimValue} sudah terdaftar pada mahasiswa lain!`, "danger");
+                inputNim.focus();
+                return;
+            }
+
+            const targetIndex = mahasiswaList.findIndex(item => item.id === editTargetId);
+            if (targetIndex !== -1) {
+                mahasiswaList[targetIndex].nim = nimValue;
+                mahasiswaList[targetIndex].nama = namaValue;
+                mahasiswaList[targetIndex].fakultas = fakultasValue;
+                mahasiswaList[targetIndex].jurusan = jurusanValue;
+                
+                saveDataToStorage();
+                renderTable(searchInput.value);
+                updateStats();
+                resetFormState();
+                showToast("Data mahasiswa berhasil diperbarui!", "success");
+            }
+        } else {
+            // Mode Tambah Baru
+            // Pastikan NIM unik
+            const nimExits = mahasiswaList.some(item => item.nim === nimValue);
+            if (nimExits) {
+                showToast(`NIM ${nimValue} sudah terdaftar di sistem!`, "danger");
+                inputNim.focus();
+                return;
+            }
+
+            const newMahasiswa = {
+                id: 'mahasiswa-' + Date.now(),
+                nim: nimValue,
+                nama: namaValue,
+                fakultas: fakultasValue,
+                jurusan: jurusanValue
+            };
+
+            mahasiswaList.push(newMahasiswa);
+            saveDataToStorage();
+            renderTable(searchInput.value);
+            updateStats();
+            resetFormState();
+            showToast("Data mahasiswa berhasil ditambahkan!", "success");
+        }
+    }
+
+    // -------------------------------------------------------------
+    // Fungsi Edit & Update State
+    // -------------------------------------------------------------
+    function initiateEdit(id) {
+        const target = mahasiswaList.find(item => item.id === id);
+        if (!target) return;
+
+        isEditMode = true;
+        editTargetId = id;
+
+        // Mengisi Form dengan data target
+        inputNim.value = target.nim;
+        inputNama.value = target.nama;
+        inputFakultas.value = target.fakultas;
+        inputJurusan.value = target.jurusan;
+
+        // Hapus styling error jika ada
+        const inputs = formElement.querySelectorAll('input');
+        inputs.forEach(input => input.classList.remove('dirty'));
+
+        // Transisi Form ke Mode Edit (visual & interaktif)
+        formPanel.style.border = '1px solid var(--warning)';
+        formPanel.style.boxShadow = '0 10px 30px -10px var(--warning-glow)';
+        
+        // Ubah Header Form
+        formTitle.querySelector('span').textContent = "Update Data Mahasiswa";
+        formTitle.style.color = "var(--warning)";
+        formTitleIcon.innerHTML = `<!-- Refresh/Edit Icon SVG -->
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 12H21"/></svg>`;
+        formTitleIcon.style.color = "var(--warning)";
+
+        // Ubah Tombol Aksi di Form
+        formActions.className = "btn-group edit-mode";
+        formActions.innerHTML = `
+            <button type="submit" class="btn btn-update">
+                <!-- Save/Check Icon SVG -->
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                <span>Update Data</span>
+            </button>
+            <button type="button" class="btn btn-cancel" onclick="resetFormState()">
+                <!-- X Close Icon SVG -->
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                <span>Batal</span>
+            </button>
+        `;
+
+        // Scroll halus ke formulir (berguna di perangkat mobile)
+        formPanel.scrollIntoView({ behavior: 'smooth' });
+        inputNim.focus();
+        showToast("Memuat data mahasiswa ke formulir.", "info");
+    }
+
+    function resetFormState() {
+        isEditMode = false;
+        editTargetId = null;
+
+        // Reset nilai formulir
+        formElement.reset();
+        
+        // Hapus error visual
+        const inputs = formElement.querySelectorAll('input');
+        inputs.forEach(input => input.classList.remove('dirty'));
+
+        // Reset visual Form Panel ke semula
+        formPanel.style.border = '1px solid var(--border-color)';
+        formPanel.style.boxShadow = 'var(--shadow-premium)';
+        
+        // Kembalikan Header Form
+        formTitle.querySelector('span').textContent = "Form Input Mahasiswa";
+        formTitle.style.color = "var(--text-primary)";
+        formTitleIcon.innerHTML = `<!-- User Plus Icon SVG -->
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>`;
+        formTitleIcon.style.color = "var(--primary)";
+
+        // Kembalikan Tombol Aksi di Form ke semula
+        formActions.className = "btn-group";
+        formActions.innerHTML = `
+            <button type="submit" class="btn btn-primary" id="btn-submit-main">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                <span>Tambah Data</span>
+            </button>
+        `;
+    }
+
+    // -------------------------------------------------------------
+    // Fungsi Hapus & Konfirmasi Dialog Kustom
+    // -------------------------------------------------------------
+    function confirmDelete(id) {
+        const target = mahasiswaList.find(item => item.id === id);
+        if (!target) return;
+
+        deleteTargetId = id;
+        
+        // Ubah deskripsi modal dengan info spesifik mahasiswa
+        document.getElementById('modal-title').textContent = "Hapus Data Mahasiswa?";
+        document.getElementById('modal-desc').innerHTML = `Apakah Anda yakin ingin menghapus data mahasiswa <strong>${escapeHTML(target.nama)}</strong> (NIM: ${escapeHTML(target.nim)})? Tindakan ini tidak dapat dibatalkan.`;
+        
+        // Buka modal
+        confirmModal.classList.add('active');
+
+        // Fokus ke tombol konfirmasi
+        modalConfirmBtn.focus();
+
+        // Bind event click konfirmasi
+        modalConfirmBtn.onclick = executeDelete;
+    }
+
+    function executeDelete() {
+        if (!deleteTargetId) return;
+
+        const targetIndex = mahasiswaList.findIndex(item => item.id === deleteTargetId);
+        if (targetIndex !== -1) {
+            const namaMahasiswa = mahasiswaList[targetIndex].nama;
+            
+            // Hapus dari array
+            mahasiswaList.splice(targetIndex, 1);
+            
+            // Sinkronkan ke localstorage
+            saveDataToStorage();
+            
+            // Update UI
+            renderTable(searchInput.value);
+            updateStats();
+            
+            // Jika data yang dihapus sedang di-edit, reset formulir
+            if (isEditMode && editTargetId === deleteTargetId) {
+                resetFormState();
+            }
+
+            showToast(`Data mahasiswa ${namaMahasiswa} berhasil dihapus!`, "success");
+        }
+
+        closeConfirmModal();
+    }
+
+    function closeConfirmModal() {
+        confirmModal.classList.remove('active');
+        deleteTargetId = null;
+    }
+
+    // Menutup modal dengan mengklik overlay latar belakang
+    confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+            closeConfirmModal();
+        }
+    });
+
+    // Menutup modal dengan menekan tombol Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && confirmModal.classList.contains('active')) {
+            closeConfirmModal();
+        }
+    });
+
+    // -------------------------------------------------------------
+    // Fitur Pencarian Real-time
+    // -------------------------------------------------------------
+    function handleSearch() {
+        const query = searchInput.value;
+        renderTable(query);
+    }
+
+    // -------------------------------------------------------------
+    // Utilitas Tambahan: Toast & Proteksi HTML Injection
+    // -------------------------------------------------------------
+    function showToast(message, type = "success") {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+
+        // Ikon toast yang sesuai
+        let iconMarkup = '';
+        if (type === 'success') {
+            iconMarkup = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+        } else if (type === 'danger') {
+            iconMarkup = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
+        } else if (type === 'warning' || type === 'info') {
+            iconMarkup = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`;
+        }
+
+        toast.innerHTML = `
+            <div class="toast-icon">${iconMarkup}</div>
+            <div class="toast-message">${escapeHTML(message)}</div>
+        `;
+
+        container.appendChild(toast);
+
+        // Menghapus toast secara otomatis setelah 3.5 detik
+        setTimeout(() => {
+            toast.classList.add('hide');
+            // Tunggu transisi slide out selesai sebelum hapus elemen dari DOM
+            toast.addEventListener('transitionend', () => {
+                toast.remove();
+            });
+        }, 3500);
+    }
+
+    // Melarikan karakter HTML untuk mencegah kerentanan XSS
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag)
+        );
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <script>
+        // array number
+        let arr = [1, 2, 3, 4, 5];
+        console.log(arr);
+
+        // array string
+        let arr2 = ["a", "b", "c", "d", "e"];
+        console.log(arr2);
+
+        // array mix
+        let arr3 = [1, "a", true, null, undefined];
+        console.log(arr3);
+
+        // access array by index
+        console.log(arr[0]);   // 1
+        console.log(arr2[2]);  // c
+        console.log(arr3[4]);  // undefined
+
+        // access array by length
+        console.log(arr.length);   // 5
+        console.log(arr2.length);  // 5
+        console.log(arr3.length);  // 5
+
+        // dengan looping array number
+        for (let i = 0; i < arr.length; i++) {
+            console.log(arr[i]);
+        }
+
+        // dengan looping array string
+        for (let i = 0; i < arr2.length; i++) {
+            console.log(arr2[i]);
+        }
+
+        // dengan looping array mix
+        for (let i = 0; i < arr3.length; i++) {
+            console.log(arr3[i]);
+        }
+    </script>
+</body>
+</html>

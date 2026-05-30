@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // data object mahasiswa
+        let mahasiswa = {
+            nim: "231011450500",
+            nama: "Abdul Majid",
+            fakultas: "Ilmu Komputer",
+            jurusan: "Teknik Informatika",
+            kelas: "05TPLE004"
+        }
+
+        // console.log("===== INI ADALAH HASIL OUTPUT OBJECT 1 =====");
+
+        // console.log(mahasiswa);
+        // console.log(mahasiswa.nim);
+        // console.log(mahasiswa.nama);
+        // console.log(mahasiswa.fakultas);
+        // console.log(mahasiswa.jurusan);
+        // console.log(mahasiswa.kelas);
+
+        document.write("===== INI ADALAH HASIL OUTPUT OBJECT 1 =====")
+        document.write(mahasiswa.nim + "<br>");
+        document.write(mahasiswa.nama + "<br>");
+        document.write(mahasiswa.fakultas + "<br>");
+        document.write(mahasiswa.jurusan + "<br>");
+        document.write(mahasiswa.kelas + "<br>");
+
+
+        // object dengan method
+        let mahasiswa2 = {
+            nama:"Abdul Majid",
+            nim:"231011450500",
+            jurusan:"Teknik Informatika",
+            kelas:"05TPLE004",
+            tampilData: function() {
+                return `
+                nama : ${this.nama} <br>
+                nim : ${this.nim} <br>
+                jurusan : ${this.jurusan} <br>
+                kelas : ${this.kelas} <br>
+                `        
+            }
+        }
+
+        // console.log("===== INI ADALAH HASIL OUTPUT OBJECT 2 =====");
+        // console.log(mahasiswa2.tampilData());
+
+        document.write("===== INI ADALAH HASIL OUTPUT OBJECT 2 ===== <br>")
+        document.write(mahasiswa2.tampilData() + "<br>");
+
+        
+    </script>
+</body>
+</html>
