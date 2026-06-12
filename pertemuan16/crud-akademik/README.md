@@ -7,22 +7,17 @@ menggunakan **PHP + MySQL + Bootstrap 5 + Fetch API (AJAX)**.
 
 ## ⚙️ Cara Setup di Laragon
 
-### 1. Konfigurasi Lokasi Project
+### 1. Konfigurasi Lokasi Project (Telah Diterapkan via Link Simbolik)
 
-**Opsi A – Gunakan Link Simbolik (Direkomendasikan):**
-Gunakan opsi ini jika Anda ingin file tetap berada di folder tugas kuliah (`c:\project\...`), tetapi Laragon tetap dapat membacanya.
+Project ini telah berhasil dihubungkan ke Laragon menggunakan **Link Simbolik (Junction)** agar file tetap berada di folder workspace kuliah (`c:\project\...`) Anda, namun Laragon tetap dapat mengaksesnya melalui `C:\laragon\www\crud-akademik`.
+
+Jika Anda perlu membuatnya kembali di komputer lain, ikuti langkah berikut:
 1. Buka **Command Prompt (CMD)** atau **PowerShell** sebagai Administrator.
 2. Jalankan perintah berikut:
    ```cmd
    mklink /J "C:\laragon\www\crud-akademik" "c:\project\pemrograman-web-1\abdulmajid_pemrogramanWeb1\pertemuan16\crud-akademik"
    ```
-3. Restart Apache di Laragon.
-
-**Opsi B – Pindahkan Manual:**
-Salin/pindahkan folder `crud-akademik/` langsung ke:
-```
-C:\laragon\www\crud-akademik\
-```
+3. Restart Apache pada aplikasi Laragon Anda.
 
 ### 2. Import Database
 
